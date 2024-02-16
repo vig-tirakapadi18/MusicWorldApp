@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Payment</title>
+		<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js" defer></script>
+	</head>
+	<body>
+		<h1>Why premium?</h1>
+		<p>Some description...</p>
+		
+		<form>
+			<button type="submit" class="buy-btn">BUY</button>			
+		</form>
+		
+		<script>
+			$(document).ready(function() {
+			    $(".buy-btn").click(function(e) {
+			        e.preventDefault();
+			        var form = $(this).closest('form');
+			        
+			        
+			        createOrder();
+			    });
+			});
+			
+			function createOrder() {
+				
+			    $.post("/create-order")
+			        .done(function(order) {
+			            order = JSON.parse(order);
+			            var options = {
+			                "key": "rzp_test_fOZMBRxyWNBVhm",
+			                "amount": order.amount_due.toString(),
+			                "currency": "INR",
+			                "name": "MusicWorld",
+			                "description": "Payment for premium user!",
+			                "order_id": order.id,
+			                "handler": function (response) {
+			                    verifyPayment(response.razorpay_order_id, response.razorpay_payment_id, response.razorpay_signature);
+			                },
+			                "prefill": {
+			                    "name": "Vighnesh VT",
+			                    "email": "vighnesh.vt@gmail.com",
+			                    "contact": "9876543210"
+			                },
+			                "notes": {
+			                    "address": "Somewhere in world!"
+			                },
+			                "theme": {
+			                    "color": "#F37254"
+			                }
+			            };
+			            var rzp1 = new Razorpay(options);
+			            rzp1.open();
+			        })
+			        .fail(function(error) {
+			            console.error("Error:", error);
+			        });
+			}
+			
+			function verifyPayment(orderId, paymentId, signature) {
+			     $.post("/verify", { orderId: orderId, paymentId: paymentId, signature: signature })
+			         .done(function(isValid) {
+			             if (isValid) {
+			                 alert("Payment successful");
+			                 window.location.href = 'payment-success';
+			             } else {
+			                 alert("Payment failed");
+			                 window.location.href = 'payment-failure';
+			             }
+			         })
+			         .fail(function(error) {
+			             console.error("Error:", error);
+			         });
+			}
+		</script>
+		
+		<!-- <script>
+		var options = {
+		    "key": "rzp_test_fOZMBRxyWNBVhm", 
+		    "amount": "50000", 
+		    "currency": "INR",
+		    "name": "MusicWorld",
+		    "description": "Payment for premium user!",
+		    "image": "https://example.com/your_logo",
+		    "order_id": "order_IluGWxBm9U8zJ8", 
+		    "handler": function (response){
+		        alert(response.razorpay_payment_id);
+		        alert(response.razorpay_order_id);
+		        alert(response.razorpay_signature)
+		    },
+		    "prefill": {
+		        "name": "Vighnesh VT",
+		        "email": "vig.vt@gmail.com",
+		        "contact": "9876543210"
+		    },
+		    "notes": {
+		        "address": "Razorpay Corporate Office"
+		    },
+		    "theme": {
+		        "color": "#3399cc"
+		    }
+		};
+		var rzp1 = new Razorpay(options);
+		rzp1.on('payment.failed', function (response){
+		        alert(response.error.code);
+		        alert(response.error.description);
+		        alert(response.error.source);
+		        alert(response.error.step);
+		        alert(response.error.reason);
+		        alert(response.error.metadata.order_id);
+		        alert(response.error.metadata.payment_id);
+		});
+		document.getElementById('rzp-button1').onclick = function(e){
+		    rzp1.open();
+		    e.preventDefault();
+		}
+		</script> 	-->
+	</body>
+</html>

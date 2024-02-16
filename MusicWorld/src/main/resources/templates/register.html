@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Register</title>
+</head>
+<body>
+	<h1>Register</h1>
+	<form action="/add-user" method="post">
+		<fieldset>
+			<legend>Username</legend>
+			<input type="text" name="username" />
+		</fieldset>
+		<fieldset>
+			<legend>Email ID</legend>
+			<input type="email" name="email" />
+		</fieldset>
+		<fieldset>
+			<legend>Password</legend>
+			<input type="password" name="password" />
+		</fieldset>
+		<fieldset>
+			<legend>Gender</legend>
+			<input type="radio" name="gender" value="male" />
+			<label>Male</label>
+			<input type="radio" name="gender" value="female" />
+			<label>Female</label>
+			<input type="radio" name="gender" value="other" />
+			<label>Other</label>
+		</fieldset>
+		<fieldset>
+			<legend>Role</legend>
+			<input type="radio" name="role" value="admin" />
+			<label>Admin</label>
+			<input type="radio" name="role" value="customer" />
+			<label>Customer</label>
+		</fieldset>
+		<fieldset>
+			<legend>Address</legend>
+			<textarea cols="30" rows="2"  name="address"></textarea>
+		</fieldset>
+		<button type="submit">REGISTER</button>
+	</form>
+</body>
+</html>

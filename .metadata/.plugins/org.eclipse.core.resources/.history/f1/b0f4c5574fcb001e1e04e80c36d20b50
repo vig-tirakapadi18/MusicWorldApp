@@ -1,0 +1,61 @@
+package com.musicWorld.project.controllers;
+
+import org.json.JSONObject;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
+import com.razorpay.Utils;
+
+@Controller
+public class PaymentController {
+	@PostMapping("/create-order")
+	@ResponseBody
+	public String createOrder() {
+		Order order = null;
+		
+		try {
+			RazorpayClient razorpay = new RazorpayClient(
+					"rzp_test_fOZMBRxyWNBVhm", "qCUaSgpnMSNOapgNsKzTJBIN");
+	
+			JSONObject orderRequest = new JSONObject();
+			orderRequest.put("amount",50000);
+			orderRequest.put("currency","INR");
+			orderRequest.put("receipt", "receipt#1");
+			JSONObject notes = new JSONObject();
+			notes.put("notes_key_1","Tea, Earl Grey, Hot");
+			orderRequest.put("notes",notes);
+			order = razorpay.orders.create(orderRequest);
+		} catch (RazorpayException e) {
+			e.printStackTrace();
+		}
+		
+		return order.toString();
+	}
+	
+	@PostMapping("/verify-payment")
+	@ResponseBody
+	public String verifyPayment(@RequestParam String orderId, 
+															@RequestParam String paymentId, 
+															@RequestParam String signature) {
+		
+		try {
+			RazorpayClient razorpay = new RazorpayClient("[YOUR_KEY_ID]", "[YOUR_KEY_SECRET]");
+			
+			String secret = "EnLs21M47BllR3X8PSFtjtbd";
+			
+			JSONObject options = new JSONObject();
+			options.put("razorpay_order_id", "order_IEIaMR65cu6nz3");
+			options.put("razorpay_payment_id", "pay_IH4NVgf4Dreq1l");
+			options.put("razorpay_signature", "0d4e745a1838664ad6c9c9902212a32d627d68e917290b0ad5f08ff4561bc50f");
+			
+			boolean status =  Utils.verifyPaymentSignature(options, secret);			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+}

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Payment Failure</title>
+	</head>
+	<body>
+		<p>Unable to process the payment! Please do try doing the paument again...</p>
+		<a href="/sample-payment">Try payment again</a>
+	</body>
+</html>

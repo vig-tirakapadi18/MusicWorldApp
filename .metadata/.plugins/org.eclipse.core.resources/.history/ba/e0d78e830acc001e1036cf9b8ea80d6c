@@ -1,0 +1,62 @@
+package com.musicWorld.project.controllers;
+
+import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.*;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import com.musicWorld.project.entities.Song;
+import com.musicWorld.project.entities.Users;
+import com.musicWorld.project.services.SongsService;
+import com.musicWorld.project.services.UsersService;
+
+import jakarta.servlet.http.HttpSession;
+
+@Controller
+public class SongsController {
+	@Autowired
+	SongsService sService;
+	
+	@Autowired
+	UsersService uService;
+	
+	@PostMapping("/add-song")
+	public String addSong(@ModelAttribute Song song) {
+		
+		if(sService.isSongExists(song.getName())){
+//			System.out.println("Song already exists!");
+			return "songAddedFail";
+		} else {
+			sService.addSong(song);			
+			return "songAddedSuccess";
+		}
+	}
+	
+	@GetMapping("/view-songs")
+	public String viewSongs(Model model) {
+		List<Song> songsList = sService.fetchAllSongs();
+		model.addAttribute("songsList", songsList);
+		
+		return "viewSongs";
+	}
+	
+	@GetMapping("/explore-customer-songs")
+	public String exploreCustomerSongs(Model model, HttpSession session) {
+			Users user = uService.getUserByEmail(email);
+			boolean isPremiumCustomer = user.isPremium();
+		
+		if(isPremiumCustomer) {
+			List<Song> songsList = sService.fetchAllSongs();
+			model.addAttribute("songsList",songsList);
+			
+			return "viewSongs";
+		} else {
+			return "makePayment";
+		}
+	}
+}
+
+// https://github.com/vig-tirakapadi18/MusicWorld/raw/main/blank_space.mp3
+// https://github.com/vig-tirakapadi18/MusicWorld/raw/main/the_nights.mp3
+// https://github.com/vig-tirakapadi18/MusicWorld/raw/main/whatever_it_takes.mp3
