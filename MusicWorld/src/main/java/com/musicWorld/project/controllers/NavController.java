@@ -1,0 +1,32 @@
+package com.musicWorld.project.controllers;
+
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+public class NavController {
+	@GetMapping("/register-user")
+	public String registerUser() {
+		return "register";
+	}
+
+	@GetMapping("/login-user")
+	public String loginUser() {
+		return "login";
+	}
+
+	@GetMapping("/add-new-song")
+	public String addNewSong() {
+		return "addSong";
+	}
+
+	@GetMapping("/make-payment")
+	public String makePayment() {
+		return "makePayment";
+	}
+
+	@GetMapping("/reset-password")
+	public String resetPassword() {
+		return "resetPassword";
+	}
+}
